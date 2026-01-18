@@ -1,80 +1,82 @@
-# Relatório Técnico: Projeto Aromatizador Mecatrônico (Came Simétrico)
+# 🌬️ DevLog: Projetando o Aromatizador IoT Definitivo
 
-Como Projetista Mecatrônico Sênior, validei nossa solução. Chegamos a um design otimizado (DFMA - Design for Manufacturing and Assembly) que equilibra robustez mecânica com simplicidade de controle.
+Sempre quis um aromatizador automático, mas me deparei com dois problemas no mercado: ou os produtos comerciais usam refis proprietários caros, ou as soluções DIY envolvem bombas, mangueiras e vazamentos.
 
-A escolha do **Came Simétrico ("Lombada")** acoplado a uma **Máquina de Estados** transforma um problema analógico complexo em uma operação digital binária e confiável.
+Como engenheiro, decidi resolver isso aplicando princípios de **Design Mecatrônico Robusto (KISS)**. Meu objetivo: criar um dispositivo universal, conectado e mecanicamente infalível.
 
-Abaixo segue a documentação técnica final para a execução do projeto.
-
----
-
-## 1. Lista de Materiais (BOM - Bill of Materials)
-
-### Eletrônica e Atuação
-* **Microcontrolador:** 1x ESP32 (DevKit V1 ou S3/C3).
-* **Atuador:** 1x Servo Motor **MG996R** (Engrenagens Metálicas). *Não aceite SG90 ou servos de plástico.*
-* **Gerenciamento de Energia:**
-    * 1x Capacitor Eletrolítico **1000uF / 16V** (Essencial para filtrar o pico de corrente na partida do motor e evitar reset do ESP32).
-    * Fonte de Alimentação USB 5V (Carregador de celular de **mínimo 2A** reais).
-    * Cabo Micro-USB de boa qualidade (baixa resistência).
-
-### Mecânica e Hardware
-* **Reservatório:** 1x Frasco Spray Genérico 100ml (modelo de viagem/farmácia, cilíndrico).
-    * *Requisito:* O botão do spray deve ter um curso suave e retorno rápido.
-* **Fixação:** 4x Parafusos M3 ou M4 com porcas (para fixar o servo no case).
-* **Material de Impressão:** PLA ou PETG (A Bambu Lab A1 Mini dá conta tranquilamente).
+Aqui está o registro do desenvolvimento e as decisões técnicas que tomei.
 
 ---
 
-## 2. Plano de Ação (Execução em Fases)
+## 💡 O Conceito: Por que Mecânica Pura?
 
-### Fase 1: Engenharia Reversa e CAD (Fusion 360)
-Antes de imprimir, precisamos das cotas de controle.
-1.  **Metrologia:** Meça o **Curso (Stroke)** do botão do spray (Ex: 12mm). Adicione +2mm de tolerância (Total: 14mm).
-2.  **Modelagem do Came (A "Lombada"):**
-    * Desenhe o perfil no Fusion.
-    * Ângulo 0º e 180º: Raio $R_{min}$ (Repouso).
-    * Ângulo 90º: Raio $R_{max} = R_{min} + \text{Curso} + 2mm$.
-    * Faça transições suaves (Splines) entre os pontos.
-3.  **Modelagem do Case:**
-    * Crie os **Rasgos Oblongos** no suporte do servo para permitir ajuste vertical (calibração física).
-    * Desenhe os trilhos para o frasco deslizar e travar na posição correta.
+Minha primeira ideia foi usar bombas peristálticas ou diafragmas (hidráulica). Mas, analisando a complexidade, percebi que isso adicionava pontos de falha desnecessários: vedação, limpeza de tubos e risco de vazamento na eletrônica.
 
-### Fase 2: Eletrônica e Firmware
-1.  **Montagem de Bancada:** Conecte o ESP32 + Servo + Capacitor na protoboard.
-    * *Ligação:* Servo VCC direto no pino VIN (5V da USB). **Nunca** no 3.3V.
-2.  **Coding (A Máquina de Estados):**
-    * Implemente a lógica de ir de 0º para 180º (Spray A) e 180º para 0º (Spray B).
-    * Implemente o WebServer simples para input do timer.
-3.  **Teste de Stress:** Deixe rodando na bancada por 1 hora para garantir que não há aquecimento ou *memory leaks* no código.
+Decidi pivotar para uma abordagem **100% Mecânica**. Em vez de manipular o líquido, eu manipulo o frasco. O sistema funciona como um "dedo robótico" que aperta qualquer spray de farmácia (100ml).
 
-### Fase 3: Integração e Validação
-1.  **Impressão 3D:** Imprima o Came com **100% de Infill** (sólido) para não deformar com a força da mola.
-2.  **Montagem Final:** Parafuse o servo, encaixe o came, deslize o frasco.
-3.  **Calibração Mecânica:**
-    * Solte os parafusos do servo.
-    * Coloque o servo em 90º (ponto de máxima extensão).
-    * Desça o corpo do servo até o came apertar totalmente o botão.
-    * Aperte os parafusos do servo.
+### A Inovação: O Came Simétrico ("A Lombada")
+Em vez de usar uma alavanca simples (que exige calibração chata e retorno por mola), desenhei um **Came Simétrico** acoplado ao servo.
+
+* **O Problema da Alavanca:** Ela precisa ir e voltar para dar um spray, dobrando o tempo de operação do motor.
+* **A Minha Solução:** Um came oval.
+    * **0º (Repouso A):** O came não toca no frasco.
+    * **90º (Ataque):** O raio máximo aperta o spray.
+    * **180º (Repouso B):** O came libera o frasco do outro lado.
+    
+Isso permite que o servo faça uma varredura completa (0 → 180) para acionar o spray, transformando um movimento rotativo em linear de forma muito mais eficiente.
 
 ---
 
-## 3. Pontos de Atenção (Análise de Riscos - FMEA)
+## 🛠️ Hardware: As Escolhas
 
-Como sênior, aqui estão os detalhes onde os projetos amadores costumam falhar:
+Para garantir confiabilidade, fugi dos componentes de brinquedo.
 
-* **1. O Risco de "Stall" (Travamento):**
-    * *Problema:* Se o came tentar empurrar o botão mais do que ele aguenta (fim de curso físico da mola), o servo vai travar, puxar corrente máxima (2.5A), aquecer e pode queimar o ESP32 ou a si mesmo.
-    * *Mitigação:* A regulagem dos rasgos oblongos é crítica. Ajuste para que o ponto máximo do came (90º) coincida exatamente com o fim de curso do spray, sem forçar além.
+* **Cérebro: ESP32.** Escolhi pela conectividade Wi-Fi nativa. Quero configurar os intervalos pelo celular (Web Server), não ficar apertando botões físicos na parede.
+* **Músculo: Servo MG996R.** Nada de servos azuis (SG90). Preciso de engrenagens de metal e torque de 10kg/cm para vencer a mola do spray sem esforço.
+* **Segurança Elétrica:** Adicionei um capacitor de **1000uF** na linha de 5V. Servos potentes causam picos de corrente na partida que resetam o microcontrolador. O capacitor resolve esse *brownout*.
 
-* **2. O "Brownout" (Queda de Tensão):**
-    * *Problema:* O MG996R é um monstro. Na partida, ele derruba a tensão da USB. Se cair abaixo de 2.8V, o ESP32 reinicia.
-    * *Mitigação:* **Não ignore o Capacitor de 1000uF.** Coloque-o o mais próximo possível dos pinos de alimentação do Servo.
+---
 
-* **3. Fadiga do Material (Creep):**
-    * *Problema:* Plástico PLA sob pressão constante deforma.
-    * *Mitigação:* Projete o Came para que, na posição de repouso (0º e 180º), ele **não toque** no botão. Deve haver uma folga de 0.5mm a 1mm. Assim, o plástico não fica sob tensão o tempo todo.
+## 🧠 A Lógica: Máquina de Estados
 
-* **4. Isolamento de Fluidos:**
-    * *Problema:* Vazamento eventual do spray.
-    * *Mitigação:* Projete o case com a eletrônica (ESP32) fisicamente separada do compartimento do frasco (ex: uma "parede" de plástico entre o servo e o microcontrolador). Se o frasco vazar, escorre para fora, não para a placa.
+No firmware, implementei uma lógica de controle baseada em estados para otimizar o desgaste mecânico. Não é apenas "ligar e desligar".
+
+O sistema sabe onde o braço está (Lado A ou Lado B).
+* Se preciso de **1 Spray**, o servo viaja de A para B (passando pela "lombada" central).
+* Se preciso de **2 Sprays**, ele vai e volta.
+
+Isso elimina movimentos mortos e torna o barulho de operação mínimo.
+
+---
+
+## 📋 Lista de Materiais (BOM)
+
+Para quem quiser replicar meu setup:
+
+1.  **ESP32** (Qualquer modelo, estou usando um DevKit V1).
+2.  **Servo MG996R** (Metal Gear).
+3.  **Fonte USB 5V 2A** (Carregador antigo de celular).
+4.  **Capacitor Eletrolítico 1000uF/16V**.
+5.  **Frasco Spray 100ml** (Genérico de viagem).
+6.  **Case Impresso em 3D** (PLA/PETG).
+
+---
+
+## ⚠️ Análise de Riscos (O que pode dar errado?)
+
+Durante o projeto, identifiquei três pontos críticos que tratei no design:
+
+1.  **Stall do Motor:** Se o came for grande demais, o servo trava e queima. **Solução:** Projetei o suporte do motor com furos oblongos, permitindo ajuste fino da altura na hora da montagem.
+2.  **Troca de Refil:** O usuário precisa trocar o frasco fácil. **Solução:** Na posição de repouso, o came não toca no botão, deixando o frasco livre para ser deslizado para fora.
+3.  **Vazamento:** Embora raro, sprays vazam. **Solução:** O compartimento da eletrônica (ESP32) fica fisicamente isolado e acima da linha do líquido.
+
+---
+
+## 🚀 Próximos Passos
+
+1.  Validar a impressão do Came com **100% de infill** (precisa ser sólido).
+2.  Testar a interface Web para ajuste de timer.
+3.  Montagem final e teste de stress da mola.
+
+---
+*Este projeto é Open Source. Sinta-se livre para usar o código e os STLs.*
