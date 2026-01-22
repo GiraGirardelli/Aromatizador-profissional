@@ -14,16 +14,15 @@ Minha primeira ideia foi usar bombas peristálticas ou diafragmas (hidráulica).
 
 Decidi pivotar para uma abordagem **100% Mecânica**. Em vez de manipular o líquido, eu manipulo o frasco. O sistema funciona como um "dedo robótico" que aperta qualquer spray de farmácia (60ml).
 
-### A Inovação: O Came Simétrico ("A Lombada")
-Em vez de usar uma alavanca simples (que exige calibração chata e retorno por mola), desenhei um **Came Simétrico** acoplado ao servo.
+### Pinhão cremalheira
 
-* **O Problema da Alavanca:** Ela precisa ir e voltar para dar um spray, dobrando o tempo de operação do motor.
-* **A Minha Solução:** Um came oval.
+* **Solução atual:** Optei por usar o pinhão cremalheira pela praticidade e maior controle da força aplicada no frasco
+* **Solução antiga:** Um came oval. (Talvez ainda haja aplicação.)
     * **0º (Repouso A):** O came não toca no frasco.
     * **90º (Ataque):** O raio máximo aperta o spray.
     * **180º (Repouso B):** O came libera o frasco do outro lado.
     
-Isso permite que o servo faça uma varredura completa (0 → 180) para acionar o spray, transformando um movimento rotativo em linear de forma muito mais eficiente.
+* **A nova solução** permite que o borrifador do frasco seja pressionado tranquilamente. O deslocamento necessário para que ele seja pressionado até o fim, é de aproximadamente **5 mm**
 
 ---
 
