@@ -12,7 +12,7 @@ Aqui está o registro do desenvolvimento e as decisões técnicas que tomei.
 
 Minha primeira ideia foi usar bombas peristálticas ou diafragmas (hidráulica). Mas, analisando a complexidade, percebi que isso adicionava pontos de falha desnecessários: vedação, limpeza de tubos e risco de vazamento na eletrônica.
 
-Decidi pivotar para uma abordagem **100% Mecânica**. Em vez de manipular o líquido, eu manipulo o frasco. O sistema funciona como um "dedo robótico" que aperta qualquer spray de farmácia (100ml).
+Decidi pivotar para uma abordagem **100% Mecânica**. Em vez de manipular o líquido, eu manipulo o frasco. O sistema funciona como um "dedo robótico" que aperta qualquer spray de farmácia (60ml).
 
 ### A Inovação: O Came Simétrico ("A Lombada")
 Em vez de usar uma alavanca simples (que exige calibração chata e retorno por mola), desenhei um **Came Simétrico** acoplado ao servo.
