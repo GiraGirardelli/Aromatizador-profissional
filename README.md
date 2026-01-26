@@ -14,13 +14,12 @@ Minha primeira ideia foi usar bombas peristálticas ou diafragmas (hidráulica).
 
 Decidi pivotar para uma abordagem **100% Mecânica**. Em vez de manipular o líquido, eu manipulo o frasco. O sistema funciona como um "dedo robótico" que aperta qualquer spray de farmácia (60ml).
 
-### Pinhão cremalheira
+### Came - Seguidor
 
-* **Solução atual:** Optei por usar o pinhão cremalheira pela praticidade e maior controle da força aplicada no frasco
-* **Solução antiga:** Um came oval. (Talvez ainda haja aplicação.)
+* **Solução antiga:** Um came oval. 
     * **0º (Repouso A):** O came não toca no frasco.
     * **90º (Ataque):** O raio máximo aperta o spray.
-    * **180º (Repouso B):** O came libera o frasco do outro lado.
+    * **0º (Repouso A):** Retorna ao repouso invertendo o sentido de rotação
     
 * **A nova solução** permite que o borrifador do frasco seja pressionado tranquilamente. O deslocamento necessário para que ele seja pressionado até o fim, é de aproximadamente **5 mm**
 
@@ -36,13 +35,16 @@ Para garantir confiabilidade, fugi dos componentes de brinquedo.
 
 ---
 
+## 🫙 Escolha do frasco:
+Escolhi um frasco de 60/100 ml (o que for mais baixo) com um aplicador no bocal, o aplicador permite que eu faça uma guia para o bocal do spray, assim o movimento do came não consegue fazer o bocal girar.
+
 ## 🧠 A Lógica: Máquina de Estados
 
 No firmware, implementei uma lógica de controle baseada em estados para otimizar o desgaste mecânico. Não é apenas "ligar e desligar".
 
 O sistema sabe onde o braço está (Lado A ou Lado B).
 * Se preciso de **1 Spray**, o servo viaja de A para B (passando pela "lombada" central).
-* Se preciso de **2 Sprays**, ele vai e volta.
+* Se preciso de **2 Sprays**, ele faz o ciclo duas vezes.
 
 Isso elimina movimentos mortos e torna o barulho de operação mínimo.
 
@@ -56,7 +58,7 @@ Para quem quiser replicar meu setup:
 2.  **Servo MG996R** (Metal Gear).
 3.  **Fonte USB 5V 2A** (Carregador antigo de celular).
 4.  **Capacitor Eletrolítico 1000uF/16V**.
-5.  **Frasco Spray 100ml** (Genérico de viagem).
+5.  **Frasco Spray com aplicador 100ml** (Genérico de viagem).
 6.  **Case Impresso em 3D** (PLA/PETG).
 
 ---
