@@ -35,7 +35,7 @@ Para garantir confiabilidade, fugi dos componentes de brinquedo.
 
 ---
 
-## 🫙 Escolha do frasco:
+## Google (Noto Color Emoji 16.0) Escolha do frasco:
 Escolhi um frasco de 60/100 ml (o que for mais baixo) com um aplicador no bocal, o aplicador permite que eu faça uma guia para o bocal do spray, assim o movimento do came não consegue fazer o bocal girar.
 
 ## 🧠 A Lógica: Máquina de Estados
